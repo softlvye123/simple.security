@@ -22,11 +22,13 @@ public class AESSyncTest {
     @Before
     public void setUp() throws Exception {
         encrypt = new SyncEncryptWrapper<Encrypt>(new ObjectFactory<Encrypt>() {
+            @Override
             public Encrypt create() throws Exception {
                 return new AESPKCS5Encrypt(password);
             }
         });
         decrypt = new SyncDecryptWrapper<Decrypt>(new ObjectFactory<Decrypt>() {
+            @Override
             public Decrypt create() throws Exception {
                 return new AESPKCS5Decrypt(password);
             }

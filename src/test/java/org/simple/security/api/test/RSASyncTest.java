@@ -32,6 +32,7 @@ public class RSASyncTest {
 
         privateKeyEncrypt = new SyncEncryptWrapper<Encrypt>(
                 new ObjectFactory<Encrypt>() {
+                    @Override
                     public Encrypt create() throws Exception {
                         return new RSAPKCS1PrivateKeyEncrypt(
                                 Constants.rsaPrivateKey);
@@ -40,6 +41,7 @@ public class RSASyncTest {
 
         publicKeyDecrypt = new SyncDecryptWrapper<Decrypt>(
                 new ObjectFactory<Decrypt>() {
+                    @Override
                     public Decrypt create() throws Exception {
                         return new RSAX509PublicKeyDecrypt(
                                 Constants.rsaPublicKey);
@@ -48,6 +50,7 @@ public class RSASyncTest {
 
         publicKeyEncrypt = new SyncEncryptWrapper<Encrypt>(
                 new ObjectFactory<Encrypt>() {
+                    @Override
                     public Encrypt create() throws Exception {
                         return new RSAX509PublicKeyEncrypt(
                                 Constants.rsaPublicKey);
@@ -56,6 +59,7 @@ public class RSASyncTest {
 
         privateKeyDecrypt = new SyncDecryptWrapper<Decrypt>(
                 new ObjectFactory<Decrypt>() {
+                    @Override
                     public Decrypt create() throws Exception {
                         return new RSAPKCS1PrivateKeyDecrypt(
                                 Constants.rsaPrivateKey);
@@ -63,6 +67,7 @@ public class RSASyncTest {
                 });
 
         privateKeySign = new SyncSignWrapper<Sign>(new ObjectFactory<Sign>() {
+            @Override
             public Sign create() throws Exception {
                 return new RSAPKCS1Sign(Constants.rsaPrivateKey);
             }
@@ -70,6 +75,7 @@ public class RSASyncTest {
 
         publicKeyVerify = new SyncVerifyWrapper<Verify>(
                 new ObjectFactory<Verify>() {
+                    @Override
                     public Verify create() throws Exception {
                         return new RSAX509Verify(Constants.rsaPublicKey);
                     }

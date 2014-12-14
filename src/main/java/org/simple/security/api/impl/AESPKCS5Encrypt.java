@@ -13,19 +13,20 @@ import org.simple.security.api.Constants;
  */
 public class AESPKCS5Encrypt extends BaseEncrypt {
 
-    // 明文密码（至少16字节）
-    private String password;
+    private SecretKeySpec secretKey;
 
     public AESPKCS5Encrypt(String password) throws Exception {
-        this.password = password;
+        this(password.getBytes(Constants.DEFAULT_CHARSET));
+    }
+
+    public AESPKCS5Encrypt(byte[] bytes) throws Exception {
+        this.secretKey = new SecretKeySpec(bytes, 0, 16,
+                Constants.AES_KEY_ALGORITHM);
         this.cipher = createCipher();
     }
 
     @Override
     protected Cipher createCipher() throws Exception {
-        SecretKeySpec secretKey = new SecretKeySpec(
-                password.getBytes(Constants.DEFAULT_CHARSET), 0, 16,
-                Constants.AES_KEY_ALGORITHM);
         Cipher cipher = Cipher.getInstance(Constants.AES_PKCS5_KEY);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
         return cipher;

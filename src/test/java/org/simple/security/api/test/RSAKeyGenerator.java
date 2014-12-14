@@ -6,14 +6,14 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 import org.apache.commons.codec.binary.Base64;
-import org.simple.security.api.Constants;
+import org.junit.Test;
 
 public class RSAKeyGenerator {
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void rsaKey() throws Exception {
         // 生成密钥对
-        KeyPairGenerator keyGen = KeyPairGenerator
-                .getInstance(Constants.RSA_KEY_ALGORITHM);
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         keyGen.initialize(1024);
         KeyPair key = keyGen.generateKeyPair();
 
@@ -25,4 +25,5 @@ public class RSAKeyGenerator {
         System.out.println("公钥："
                 + Base64.encodeBase64String(rsaPublic.getEncoded()));
     }
+
 }

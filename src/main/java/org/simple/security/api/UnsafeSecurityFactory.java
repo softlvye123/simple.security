@@ -49,6 +49,32 @@ public class UnsafeSecurityFactory {
     }
 
     /**
+     * 根据加密类型获取加密实现
+     * 
+     * @param encryptType
+     *            加密类型
+     * @param byte[] 密钥byte数组
+     * @return 加密实现
+     * @throws Exception
+     */
+    public static Encrypt getEncryptInstanceByBytes(EncryptType encryptType,
+            final byte[] bytes) throws Exception {
+        switch (encryptType) {
+        case RSA_PKCS1_PRIVATE:
+            return new RSAPKCS1PrivateKeyEncrypt(bytes);
+        case RSA_X509_PUBLIC:
+            return new RSAX509PublicKeyEncrypt(bytes);
+        case AES_PKCS5:
+            return new AESPKCS5Encrypt(bytes);
+        case DES:
+            return new DESEncrypt(bytes);
+        default:
+            throw new IllegalArgumentException("the encrypt type ["
+                    + encryptType + "] does't support!");
+        }
+    }
+
+    /**
      * 根据解密类型获取对应的解密实现
      * 
      * @param decryptType
@@ -69,6 +95,32 @@ public class UnsafeSecurityFactory {
             return new AESPKCS5Decrypt(secretKey);
         case DES:
             return new DESDecrypt(secretKey);
+        default:
+            throw new IllegalArgumentException("the decrypt type ["
+                    + decryptType + "] does't support!");
+        }
+    }
+
+    /**
+     * 根据解密类型获取对应的解密实现
+     * 
+     * @param decryptType
+     *            解密类型
+     * @param byte[] 密钥byte数组
+     * @return 解密实现
+     * @throws Exception
+     */
+    public static Decrypt getDecryptInstanceByBytes(DecryptType decryptType,
+            final byte[] bytes) throws Exception {
+        switch (decryptType) {
+        case RSA_PKCS1_PRIVATE:
+            return new RSAPKCS1PrivateKeyDecrypt(bytes);
+        case RSA_X509_PUBLIC:
+            return new RSAX509PublicKeyDecrypt(bytes);
+        case AES_PKCS5:
+            return new AESPKCS5Decrypt(bytes);
+        case DES:
+            return new DESDecrypt(bytes);
         default:
             throw new IllegalArgumentException("the decrypt type ["
                     + decryptType + "] does't support!");
@@ -99,9 +151,35 @@ public class UnsafeSecurityFactory {
     }
 
     /**
+     * 根据签名类型获取对应的签名实现
+     * 
+     * @param signType
+     *            签名类型
+     * @param byte[] 密钥byte数组
+     * @return 签名实现
+     * @throws Exception
+     */
+    public static Sign getSignInstanceByBytes(SignType signType,
+            final byte[] bytes) throws Exception {
+        switch (signType) {
+        case MD5:
+            return new MD5Sign();
+        case RSA_PKCS1_PRIVATE:
+            return new RSAPKCS1Sign(bytes);
+        default:
+            throw new IllegalArgumentException("the sign type [" + signType
+                    + "] does't support!");
+        }
+    }
+
+    /**
      * 根据验签类型获取对应的验签实现
      * 
-     * @return
+     * @param verifyType
+     *            验签类型
+     * @param secretKey
+     *            密钥
+     * @return 验签实现
      * @throws Exception
      */
     public static Verify getVerifyInstance(VerifyType verifyType,
@@ -111,6 +189,28 @@ public class UnsafeSecurityFactory {
             return new MD5Verify();
         case RSA_X509_PUBLIC:
             return new RSAX509Verify(secretKey);
+        default:
+            throw new IllegalArgumentException("the verify type [" + verifyType
+                    + "] does't support!");
+        }
+    }
+
+    /**
+     * 根据验签类型获取对应的验签实现
+     * 
+     * @param verifyType
+     *            验签类型
+     * @param byte[] 密钥byte数组
+     * @return 验签实现
+     * @throws Exception
+     */
+    public static Verify getVerifyInstanceByBytes(VerifyType verifyType,
+            final byte[] bytes) throws Exception {
+        switch (verifyType) {
+        case MD5:
+            return new MD5Verify();
+        case RSA_X509_PUBLIC:
+            return new RSAX509Verify(bytes);
         default:
             throw new IllegalArgumentException("the verify type [" + verifyType
                     + "] does't support!");

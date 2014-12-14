@@ -16,7 +16,7 @@ import org.simple.security.api.Constants;
  */
 public class RSAX509Verify extends BaseVerify {
 
-    private String rsaPublicKey;
+    private PublicKey pubKey;
 
     /**
      * 创建基于X509 + RSA的公钥鉴权对象
@@ -26,20 +26,26 @@ public class RSAX509Verify extends BaseVerify {
      * @throws Exception
      */
     public RSAX509Verify(String rsaPublicKey) throws Exception {
-        this.rsaPublicKey = rsaPublicKey;
-        this.signature = createSignature();
+        this(Base64.decodeBase64(rsaPublicKey));
     }
 
-    @Override
-    protected Signature createSignature() throws Exception {
+    public RSAX509Verify(byte[] bytes) throws Exception {
+        pubKey = getKey(bytes);
+        signature = createSignature();
+    }
+
+    private PublicKey getKey(byte[] bytes) throws Exception {
         // 构造X509EncodedKeySpec对象
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(
-                Base64.decodeBase64(rsaPublicKey));
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(bytes);
         // KEY_ALGORITHM 指定的加密算法
         KeyFactory keyFactory = KeyFactory
                 .getInstance(Constants.RSA_KEY_ALGORITHM);
         // 取公钥匙对象
-        PublicKey pubKey = keyFactory.generatePublic(keySpec);
+        return keyFactory.generatePublic(keySpec);
+    }
+
+    @Override
+    protected Signature createSignature() throws Exception {
         // 用公钥对象校验签名
         Signature signature = Signature
                 .getInstance(Constants.RSA_SIGNATURE_ALGORITHM);

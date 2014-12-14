@@ -17,7 +17,7 @@ import org.simple.security.api.Constants;
  */
 public class RSAX509PublicKeyEncrypt extends BaseEncrypt {
 
-    private String rsaPublicKey;
+    private PublicKey publicKey;
 
     /**
      * 构造X509+RSA公钥加密对象
@@ -27,17 +27,23 @@ public class RSAX509PublicKeyEncrypt extends BaseEncrypt {
      * @throws Exception
      */
     public RSAX509PublicKeyEncrypt(String rsaPublicKey) throws Exception {
-        this.rsaPublicKey = rsaPublicKey;
-        this.cipher = createCipher();
+        this(Base64.decodeBase64(rsaPublicKey));
+    }
+
+    public RSAX509PublicKeyEncrypt(byte[] bytes) throws Exception {
+        publicKey = getKey(bytes);
+        cipher = createCipher();
+    }
+
+    private PublicKey getKey(byte[] bytes) throws Exception {
+        X509EncodedKeySpec publicKeyX509 = new X509EncodedKeySpec(bytes);
+        KeyFactory keyFactory = KeyFactory
+                .getInstance(Constants.RSA_KEY_ALGORITHM);
+        return keyFactory.generatePublic(publicKeyX509);
     }
 
     @Override
     protected Cipher createCipher() throws Exception {
-        X509EncodedKeySpec publicKeyX509 = new X509EncodedKeySpec(
-                Base64.decodeBase64(rsaPublicKey));
-        KeyFactory keyFactory = KeyFactory
-                .getInstance(Constants.RSA_KEY_ALGORITHM);
-        PublicKey publicKey = keyFactory.generatePublic(publicKeyX509);
         Cipher cipher = Cipher.getInstance(Constants.RSA_PKCS1_KEY);
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         return cipher;

@@ -18,7 +18,7 @@ import org.simple.security.api.Constants;
  */
 public class RSAPKCS1PrivateKeyDecrypt extends BaseDecrypt {
 
-    private String rsaPrivateKey;
+    private PrivateKey privateKey;
 
     /**
      * 构造PKCS1+RSA私钥解密对象
@@ -28,20 +28,25 @@ public class RSAPKCS1PrivateKeyDecrypt extends BaseDecrypt {
      * @throws Exception
      */
     public RSAPKCS1PrivateKeyDecrypt(String rsaPrivateKey) throws Exception {
-        this.rsaPrivateKey = rsaPrivateKey;
+        this(Base64.decodeBase64(rsaPrivateKey));
+    }
+
+    public RSAPKCS1PrivateKeyDecrypt(byte[] bytes) throws Exception {
+        this.privateKey = getKey(bytes);
         this.cipher = createCipher();
+    }
+
+    private PrivateKey getKey(byte[] bytes) throws Exception {
+        // 生成基于PKCS1的私钥编码对象
+        PKCS1EncodedKeySpec privateKeyPKCS1 = new PKCS1EncodedKeySpec(bytes);
+        KeyFactory keyFactory = KeyFactory
+                .getInstance(Constants.RSA_KEY_ALGORITHM);
+        // 提取私钥
+        return keyFactory.generatePrivate(privateKeyPKCS1.getKeySpec());
     }
 
     @Override
     protected Cipher createCipher() throws Exception {
-        // 生成基于PKCS1的私钥编码对象
-        PKCS1EncodedKeySpec privateKeyPKCS1 = new PKCS1EncodedKeySpec(
-                Base64.decodeBase64(rsaPrivateKey));
-        KeyFactory keyFactory = KeyFactory
-                .getInstance(Constants.RSA_KEY_ALGORITHM);
-        // 提取私钥
-        PrivateKey privateKey = keyFactory.generatePrivate(privateKeyPKCS1
-                .getKeySpec());
         Cipher cipher = Cipher.getInstance(Constants.RSA_PKCS1_KEY);
         // 初始化cipher
         cipher.init(Cipher.DECRYPT_MODE, privateKey);

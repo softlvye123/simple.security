@@ -13,19 +13,23 @@ import org.simple.security.api.Constants;
  */
 public class AESPKCS5Decrypt extends BaseDecrypt {
 
-    // 明文密码（至少16字节）
-    private String password;
+    private SecretKeySpec key;
 
     public AESPKCS5Decrypt(String password) throws Exception {
-        this.password = password;
+        this(password.getBytes(Constants.DEFAULT_CHARSET));
+    }
+
+    public AESPKCS5Decrypt(byte[] bytes) throws Exception {
+        key = getKey(bytes);
         this.cipher = createCipher();
+    }
+
+    public SecretKeySpec getKey(byte[] bytes) {
+        return new SecretKeySpec(bytes, 0, 16, Constants.AES_KEY_ALGORITHM);
     }
 
     @Override
     protected Cipher createCipher() throws Exception {
-        SecretKeySpec key = new SecretKeySpec(
-                password.getBytes(Constants.DEFAULT_CHARSET), 0, 16,
-                Constants.AES_KEY_ALGORITHM);
         Cipher cipher = Cipher.getInstance(Constants.AES_PKCS5_KEY);
         cipher.init(Cipher.DECRYPT_MODE, key);
         return cipher;

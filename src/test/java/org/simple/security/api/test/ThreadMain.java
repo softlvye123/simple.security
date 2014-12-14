@@ -16,6 +16,7 @@ public class ThreadMain {
         try {
             privateKeyEncrypt = new SyncEncryptWrapper<Encrypt>(
                     new ObjectFactory<Encrypt>() {
+                        @Override
                         public Encrypt create() throws Exception {
                             return new RSAPKCS1PrivateKeyEncrypt(
                                     Constants.rsaPrivateKey);
@@ -24,6 +25,7 @@ public class ThreadMain {
 
             publicKeyDecrypt = new SyncDecryptWrapper<Decrypt>(
                     new ObjectFactory<Decrypt>() {
+                        @Override
                         public Decrypt create() throws Exception {
                             return new RSAX509PublicKeyDecrypt(
                                     Constants.rsaPublicKey);
@@ -37,6 +39,7 @@ public class ThreadMain {
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
             new Thread(new Runnable() {
+                @Override
                 public void run() {
                     System.out.println(Thread.currentThread().getName()
                             + " : 私钥加密 - 公钥解密");

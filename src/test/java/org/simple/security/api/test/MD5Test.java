@@ -10,7 +10,7 @@ import org.simple.security.api.impl.MD5Verify;
 
 public class MD5Test {
 
-    private final String source = "jiushixuefeng";
+    private final String source = " wqeqewqweqww";
     private Sign sign;
     private Verify verify;
 
